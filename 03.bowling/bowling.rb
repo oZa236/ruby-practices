@@ -23,7 +23,7 @@ frames.each_index do |i|
   point += frames[i].sum
   if i == 9 # 10フレーム目のとき
     if frames[9][0] == 10 # ストライク
-      count = i * 2 + 2 
+      count = i * 2 + 2
       next_point = 0
       loop do
         next_point += shots[count]
