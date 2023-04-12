@@ -2,92 +2,47 @@
 
 score = ARGV[0]
 scores = score.split(',')
-shots = []
-scores.each do |s|
-  if s == 'X'
-    shots << 10
-    shots << 0
-  else
-    shots << s.to_i
-  end
-end
+shots = scores.map { |s| s == 'X' ? 'X' : s.to_i }
 
 frames = []
-shots.each_slice(2) do |s|
-  frames << s
-end
+10.times { frames << [] }
 
-point = 0
-
-frames.each_index do |i|
-  point += frames[i].sum
-  if i == 9 # 10フレーム目のとき
-    if frames[9][0] == 10 # ストライク
-      count = i * 2 + 2
-      next_point = 0
-      loop do
-        next_point += shots[count]
-        break if frames.last.sum.zero?
-
-        count += 1
-        break if next_point != 0
-      end
-
-      next_next_point = 0
-      loop do
-        next_next_point += shots[count]
-        break if next_next_point != 0
-        break if frames.last.sum.zero?
-
-        count += 1
-      end
-      point += next_point + next_next_point
-      break
-
-    elsif frames[9].sum == 10 # スペア
-      count = i * 2 + 2
-      next_point = 0
-      loop do
-        next_point += shots[count]
-        break if next_point != 0
-
-        count += 1
-      end
-      point += next_point
-      break
-    end
-  end
-
-  if frames[i][0] == 10 # ストライク
-    count = i * 2 + 2
-    next_point = 0
-    loop do
-      next_point += shots[count]
-      count += 1
-      break if next_point != 0
-    end
-    next_next_point = 0
-    loop do
-      next_next_point += shots[count]
-      break if next_next_point != 0
-      break if frames.last.sum.zero?
-
-      count += 1
-    end
-    point += next_point + next_next_point
-
-  elsif frames[i].sum == 10 # スペア
-    count = i * 2 + 2
-    next_point = 0
-
-    loop do
-      next_point += shots[count]
-      break if next_point != 0
-
-      count += 1
-    end
-    point += next_point
+frames_index = 0
+shots.each do |shot|
+  if frames_index == 9
+    frames[frames_index] << if shot == 'X'
+                              10
+                            else
+                              shot
+                            end
+  elsif shot == 'X'
+    frames[frames_index] << 10
+    frames_index += 1
+  else
+    frames[frames_index] << shot
+    frames_index += 1 if frames[frames_index].length == 2
   end
 end
 
-puts point
+total_point = 0
+
+frames.each_with_index do |frame, index|
+  total_point += frames[index].sum
+
+  if index == 9
+    break
+  elsif frame[0] == 10
+    total_point += if index + 1 == 9
+                     frames[index + 1][0] + frames[index + 1][1]
+                   elsif frames[index + 1][0] == 10
+                     frames[index + 1][0] + frames[index + 2][0]
+                   else
+                     frames[index + 1][0] + frames[index + 1][1]
+                   end
+
+  elsif frame.sum == 10
+    total_point += frames[index + 1][0]
+  end
+end
+
+puts total_point
