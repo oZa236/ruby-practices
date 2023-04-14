@@ -1,8 +1,6 @@
 # frozen_string_literal: true
 
-input_num = ARGV[0]
-score = input_num.split(',')
-shots = score.map { |s| s == 'X' ? 'X' : s.to_i }
+shots = ARGV[0].split(',').map { |s| s == 'X' ? 'X' : s.to_i }
 
 frames = Array.new(10) { [] }
 
