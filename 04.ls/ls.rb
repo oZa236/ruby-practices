@@ -1,8 +1,6 @@
-dir_path = "."
+# frozen_string_literal: true
 
-entries = Dir.entries(dir_path)
-entries.each do |entry|
-  puts entry
+def get_directory_contents(directory_path)
+  entries = Dir.entries(directory_path).sort
+  entries.delete_if { |e| e.start_with?('.') }
 end
-
-# puts entries
