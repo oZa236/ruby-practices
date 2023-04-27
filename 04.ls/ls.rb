@@ -6,11 +6,11 @@ def get_directory_contents(directory_path)
 end
 
 def list_directory_contents(entries)
-  columns = 5
-  max_name_length = entries.max_by(:size).size
+  columns = 3
+  max_name_length = entries.max_by(&:size).size
 
   entries_column = (entries.length / columns.to_f).ceil
-  entries_with_padding = entries.map { |entry| entry.ljust(max_name_length + 8) }
+  entries_with_padding = entries.map { |entry| entry.ljust(max_name_length + 14) }
 
   (0...entries_column).each do |row|
     row_entries = []
